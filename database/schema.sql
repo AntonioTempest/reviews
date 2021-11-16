@@ -14,13 +14,15 @@ CREATE TABLE reviews(
   products_product_id integer NOT NULL,
   rating integer,
   summary text,
-  recommend bool,
-  response text,
   body text,
+  recommend boolean,
+  reported boolean,
+  response text,
   date date,
   reviewer_name text,
+  reviewer_email text,
+  response text,
   helpfulness integer,
-  reported numeric,
   PRIMARY KEY(review_id)
 );
 
@@ -32,12 +34,13 @@ CREATE TABLE photos(
   PRIMARY KEY(photo_id)
 );
 
-/* Table 'metareviews' */
-CREATE TABLE metareviews(
-  products_product_id integer NOT NULL,
-  ratings json,
-  recommended json,
-  "characteristics" json
+/* Table 'characteristic_reviews' */
+CREATE TABLE characteristic_reviews(
+  id integer NOT NULL,
+  characteristic_id integer,
+  reviews_review_id integer NOT NULL,
+  "value" integer,
+  PRIMARY KEY(id)
 );
 
 /* Relation 'products_reviews' */
@@ -45,12 +48,12 @@ ALTER TABLE reviews
   ADD CONSTRAINT products_reviews
     FOREIGN KEY (products_product_id) REFERENCES products (product_id);
 
-/* Relation 'products_metareviews' */
-ALTER TABLE metareviews
-  ADD CONSTRAINT products_metareviews
-    FOREIGN KEY (products_product_id) REFERENCES products (product_id);
-
 /* Relation 'reviews_photos' */
 ALTER TABLE photos
   ADD CONSTRAINT reviews_photos
+    FOREIGN KEY (reviews_review_id) REFERENCES reviews (review_id);
+
+/* Relation 'reviews_characteristic_reviews' */
+ALTER TABLE characteristic_reviews
+  ADD CONSTRAINT reviews_characteristic_reviews
     FOREIGN KEY (reviews_review_id) REFERENCES reviews (review_id);
