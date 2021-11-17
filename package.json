@@ -1,0 +1,34 @@
+{
+  "name": "antonio",
+  "version": "1.0.0",
+  "description": "SDC reviews",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "run": "nodemon ./database/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntonioTempest/reviews.git"
+  },
+  "keywords": [
+    "server",
+    "postgresql",
+    "mongodb"
+  ],
+  "author": "Alex Carlman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AntonioTempest/reviews/issues"
+  },
+  "homepage": "https://github.com/AntonioTempest/reviews#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node": "^17.1.0",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.2.0"
+  }
+}
