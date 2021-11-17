@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+csv/
+=======
 **/CSV Files/
+>>>>>>> 43705be00502eeb75c6ce6506ca4c1242aac58e3
 node_modules/
 package-lock.json
 
