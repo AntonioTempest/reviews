@@ -1,4 +1,4 @@
-const { Client } = require('pg')
+const { Client } = require('pg-promise')
 const client = new Client({
   user: "postgres",
   password: "postgres",

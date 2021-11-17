@@ -4,12 +4,8 @@
   "description": "SDC reviews",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
     "test": "test",
     "run": "nodemon ./database/index.js"
-=======
-    "test": "test"
->>>>>>> 43705be00502eeb75c6ce6506ca4c1242aac58e3
   },
   "repository": {
     "type": "git",
@@ -27,29 +23,12 @@
   },
   "homepage": "https://github.com/AntonioTempest/reviews#readme",
   "dependencies": {
-<<<<<<< HEAD
     "express": "^4.17.1",
     "node": "^17.1.0",
     "nodemon": "^2.0.15",
-    "pg": "^8.7.1"
+    "pg-promise": "10.11.1"
   },
   "devDependencies": {
     "eslint": "^8.2.0"
   }
 }
-=======
-    "airbnb": "^0.0.2",
-    "express": "^4.17.1",
-    "node": "^17.1.0",
-    "nodemon": "^2.0.15"
-  },
-  "devDependencies": {
-    "eslint": "^8.2.0",
-    "eslint-config-airbnb": "^19.0.0",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.27.0",
-    "eslint-plugin-react-hooks": "^4.3.0"
-  }
-}
->>>>>>> 43705be00502eeb75c6ce6506ca4c1242aac58e3
