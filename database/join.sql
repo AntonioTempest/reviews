@@ -1,5 +1,4 @@
 SELECT *
-  FROM reviews
-  LEFT JOIN photos AS ARRAY_AGG(id, url)
-  ON reviews.review_id = array_agg.id
-  AND reviews.product_id=2
+FROM   reviews
+LEFT JOIN (SELECT array_to_json(array_agg(id, url)) AS u FROM photos WHERE reviews.review_id = photos.review_id) x ON true
+WHERE product_id = 2;
