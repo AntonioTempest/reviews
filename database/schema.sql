@@ -4,18 +4,10 @@ CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO public;
 
-/* Table 'products' */
-CREATE TABLE products(
-  product_id integer NOT NULL,
-  page integer,
-  count integer,
-  PRIMARY KEY(product_id)
-);
-
 /* Table 'reviews' */
 
 CREATE TABLE reviews(
-  id serial NOT NULL,
+  review_id serial NOT NULL,
   product_id integer NOT NULL,
   rating integer,
   review_date BIGINT,
@@ -27,7 +19,7 @@ CREATE TABLE reviews(
   reviewer_email text,
   response text,
   helpfulness integer,
-  PRIMARY KEY(id)
+  PRIMARY KEY(review_id)
 );
 
 /* Table 'photos' */
@@ -57,9 +49,9 @@ CREATE TABLE characteristics(
 /* Relation 'reviews_photos' */
 ALTER TABLE photos
   ADD CONSTRAINT reviews_photos
-    FOREIGN KEY (review_id) REFERENCES reviews (id);
+    FOREIGN KEY (review_id) REFERENCES reviews (review_id);
 
 /* Relation 'reviews_characteristic_reviews' */
 ALTER TABLE characteristic_reviews
   ADD CONSTRAINT reviews_characteristic_reviews
-    FOREIGN KEY (review_id) REFERENCES reviews (id);
+    FOREIGN KEY (review_id) REFERENCES reviews (review_id);

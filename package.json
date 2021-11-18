@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "run": "nodemon ./database/index.js"
+    "startdb": "nodemon ./database/index.js",
+    "start-server": "nodemon ./server/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,9 @@
     "express": "^4.17.1",
     "node": "^17.1.0",
     "nodemon": "^2.0.15",
-    "pg-promise": "10.11.1"
+    "pg" : "8.7.1",
+    "pg-promise": "10.11.1",
+    "axios": "0.24.0"
   },
   "devDependencies": {
     "eslint": "^8.2.0"
