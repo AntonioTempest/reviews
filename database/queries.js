@@ -104,7 +104,7 @@ Queries.getCharacteristics = (id) => {
         characteristics.name,
         json_agg(json_build_object(
           'id', characteristics.id,
-          'value', (SELECT AVG (CAST(characteristic_reviews.value as Float))
+          'value', (SELECT TRUNC(AVG (characteristic_reviews.value),4)
           FROM characteristic_reviews
           WHERE characteristic_reviews.characteristic_id = characteristics.id
           ))
