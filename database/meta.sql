@@ -1,1 +1,0 @@
-SELECT * FROM characteristic_reviews WHERE review_id=1;
