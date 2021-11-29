@@ -73,54 +73,78 @@ app.get('/reviews', (req, res) => {
 app.get('/reviews/meta', (req, res) => {
   var id = Number(req.query.product_id);
   console.log(id);
-db.any(`json_agg(SELECT
+  var response = {
+    "product_id": id
+  }
+db.any(`SELECT
 json_build_object(
-  '1', (SELECT
+  1, (SELECT
     COUNT(reviews.rating)
     FROM reviews
     WHERE reviews.product_id= $1 AND reviews.rating = 1),
-  '2', (SELECT
+  2, (SELECT
     COUNT(reviews.rating)
     FROM reviews
     WHERE reviews.product_id= $1 AND reviews.rating = 2),
-  '3', (SELECT
+  3, (SELECT
     COUNT(reviews.rating)
     FROM reviews
     WHERE reviews.product_id= $1 AND reviews.rating = 3),
-  '4', (SELECT
+  4, (SELECT
     COUNT(reviews.rating)
     FROM reviews
     WHERE reviews.product_id= $1 AND reviews.rating = 4),
-  '5', (SELECT
+  5, (SELECT
     COUNT(reviews.rating)
     FROM reviews
     WHERE reviews.product_id= $1 AND reviews.rating = 5)
   )`, id)
     .then((data) => {
-      console.log('ratings data > ', data);
+      response.ratings= data[0]["json_build_object"];
+      db.any(`SELECT
+      json_build_object(
+      0, (SELECT
+        COUNT(reviews.recommend)
+        FROM reviews
+        WHERE reviews.product_id=$1 AND reviews.recommend=false),
+      1, (SELECT
+        COUNT(reviews.recommend)
+        FROM reviews
+        WHERE reviews.product_id=$1 AND reviews.recommend=true))`, id)
+      .then((result) => {
+       response.recommended = result[0]["json_build_object"];
+        db.any(`SELECT
+        json_build_object(
+        characteristics.name,
+        json_agg(json_build_object(
+          'id', characteristics.id,
+          'value', (SELECT AVG (CAST(characteristic_reviews.value as Float))
+          FROM characteristic_reviews
+          WHERE characteristic_reviews.characteristic_id = characteristics.id
+          ))
+          )
+        ) characteristics FROM characteristics WHERE characteristics.product_id=$1
+       GROUP BY characteristics.name`, id)
+        .then((data) => {
+          console.log(data[0].characteristics);
+          var chars = {};
+          data.map((char) => {
+            //console.log(char)
+            var type = Object.keys(char.characteristics)[0];
+            chars[type] = char.characteristics[type][0];
+          })
+          response.characteristics = chars;
+          res.status(200).send(response);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).send();
+        })
+      })
     }
     )
 
-  db.any(`SELECT
-  json_build_object(
-    characteristics.name,
-    json_agg(json_build_object(
-      'id', characteristics.id,
-      'value', (SELECT AVG (CAST(characteristic_reviews.value as Float))
-      FROM characteristic_reviews
-      WHERE characteristic_reviews.characteristic_id = characteristics.id
-      ))
-    )
-  ) characteristics FROM characteristics WHERE characteristics.product_id=$1
-  GROUP BY characteristics.name`, id)
-    .then((data) => {
-      console.log(data);
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send();
-    })
+
 })
 
 app.post('/reviews', (req, res) => {
