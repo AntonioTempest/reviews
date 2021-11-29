@@ -4,9 +4,7 @@ const app = express();
 const path = require('path');
 const port = 3000;
 
-// Database
-const pgp = require('pg-promise')(/* options */)
-const db = pgp('postgres://postgres:postgres@localhost:5432/reviews')
+const queries = require('../database/queries.js');
 
 app.use(express.json());
 app.use('/', express.static(path.join(__dirname, '../dist')));
@@ -17,53 +15,76 @@ app.listen(port, () => {
 
 app.get('/reviews', (req, res) => {
   var id = Number(req.query.product_id);
-  db.any(`SELECT *
-  FROM reviews
-  LEFT JOIN photos AS ARRAY_AGG(review_id, id, url)
-  ON reviews.review_id = array_agg.review_id
-  WHERE reviews.product_id=$1`, id)
-    .then((data) => {
-      var results = [];
-      console.log(data);
-      data.map((review) => {
-        var result = {
-          "review_id": review.review_id,
-          "rating": review.rating,
-          "summary": review.summary,
-          "recommend": review.recommend,
-          "response": review.response,
-          "body": review.body,
-          "date": review.review_date,
-          "reviewer_name": review.reviewer_name,
-          "helpfulness": review.helpfulness,
-          "photos": []
-        }
-        results.push(result);
-      })
-      return results;
-    })
-    .then((results) => {
-      res.status(200).send(results);
-    })
-    .catch((err) => {
-      console.log('ERR:', err)
-      res.status(500).send(err);
-    })
+  var page = req.query.page || 1;
+  var count = req.query.count || 5;
+  var offset = (page - 1) * count;
+  var sort = req.query.sort || 'review_date';
+  queries.getAll(id, page, count, offset, sort)
+  .then((result) => res.status(200).send(result))
+  .catch((e) => res.status(500).send(err));
 })
 
-/*
+app.get('/reviews/meta', (req, res) => {
+  var id = Number(req.query.product_id);
+  var response = {
+    "product_id": id
+  }
+  queries.getRatings(id)
+  .then((ratings) => {
+    response.ratings = ratings;
+    queries.getRecommended(id)
+    .then((recommended) => {
+      response.recommended = recommended;
+      queries.getCharacteristics(id)
+      .then((characteristics) => {
+        response.characteristics = characteristics;
+        res.status(200).send(response);
+      })
+    })
+  })
+  .catch((err) => res.status(500).send(err));
 
-db.one('SELECT $1 AS value', 123)
-  .then(function (data) {
-    console.log('DATA:', data.value)
-  })
-  .catch(function (error) {
-    console.log('ERROR:', error)
-  })
+})
 
-db.any('SELECT * FROM reviews WHERE id BETWEEN $1 AND $2', [1, 10])
-  .then((data) => {
-    console.log('DATA:', data)
+app.post('/reviews', (req, res) => {
+  var reviewId=0;
+  var d = new Date();
+  var timeZoneOffset = d.getTimezoneOffset() * 60000;
+  var date = new Date(d.getTime() - timeZoneOffset);
+  queries.postReview(req.body.product_id, req.body.rating, req.body.summary, req.body.body, req.body.recommend, req.body.name, req.body.email, false, date)
+  .then((result) => {
+    queries.postCharacteristics(req.body.characteristics)
+    .then((data) => {
+      queries.postPhotos(req.body.photos)
+      .then((data) => {
+        res.status(201).send('CREATED')
+      })
   })
-  .catch((err) => console.log(err))
-  */
+  .catch((err) => {
+    console.log(err);
+    res.status(500).send('ERR POSTING')
+  })
+  })
+})
+
+app.put('/reviews/:review_id/helpful', (req, res) => {
+  var id = req.params.review_id;
+  queries.putHelpful(id)
+  .then((result) => {
+    res.status(204).send();
+  })
+  .catch((err) => {
+    res.status(500).send();
+  })
+})
+
+app.put('/reviews/:review_id/report', (req, res) => {
+  var id = req.params.review_id;
+  queries.putReported(id)
+  .then((result) => {
+    res.status(204).send();
+  })
+  .catch((err) => {
+    res.status(500).send();
+  })
+})
