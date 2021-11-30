@@ -1,9 +1,17 @@
 const pgp = require('pg-promise')(/* options */)
-const db = pgp('postgres://postgres:postgres@localhost:5432/reviews')
+const dbconfig = {
+  user: "postgres",
+  password: "ubuntu",
+  host: "52.15.58.58",
+  port: 5432,
+  database: "reviews"
+}
+const db = pgp(dbconfig)
 
 const Queries = {};
 
 Queries.getAll = (id, page, count, offset, sort) => {
+  db.connect()
   return db.any(`SELECT *, COALESCE(photos.ph, '[]') AS photos
   FROM reviews r
   INNER JOIN LATERAL(
