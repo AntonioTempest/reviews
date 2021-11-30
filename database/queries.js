@@ -11,7 +11,6 @@ const db = pgp(dbconfig)
 const Queries = {};
 
 Queries.getAll = (id, page, count, offset, sort) => {
-  db.connect()
   return db.any(`SELECT *, COALESCE(photos.ph, '[]') AS photos
   FROM reviews r
   INNER JOIN LATERAL(
@@ -52,9 +51,6 @@ Queries.getAll = (id, page, count, offset, sort) => {
     })
     .catch((err) => {
       return err;
-    })
-    .finally(() => {
-      db.done();
     })
 }
 
