@@ -37,7 +37,6 @@ app.get('/reviews/meta', (req, res) => {
       response.recommended = recommended;
       queries.getCharacteristics(id)
       .then((characteristics) => {
-        console.log(characteristics);
         response.characteristics = characteristics;
         res.status(200).send(response);
       })
