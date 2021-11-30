@@ -21,7 +21,7 @@ app.get('/reviews', (req, res) => {
   var sort = req.query.sort || 'review_date';
   queries.getAll(id, page, count, offset, sort)
   .then((result) => res.status(200).send(result))
-  .catch((e) => res.status(500).send(err));
+  .catch((e) => res.status(500).send(e));
 })
 
 app.get('/reviews/meta', (req, res) => {
