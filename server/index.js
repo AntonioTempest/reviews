@@ -88,3 +88,7 @@ app.put('/reviews/:review_id/report', (req, res) => {
     res.status(500).send();
   })
 })
+
+app.get('/loaderio-6167b42a4833b3f8f412051e3bb30e54', (req, res) => {
+  res.status(200).send('loaderio-6167b42a4833b3f8f412051e3bb30e54');
+})
