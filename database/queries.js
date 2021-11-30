@@ -53,6 +53,9 @@ Queries.getAll = (id, page, count, offset, sort) => {
     .catch((err) => {
       return err;
     })
+    .finally(() => {
+      db.done();
+    })
 }
 
 Queries.getRatings = (id) => {
