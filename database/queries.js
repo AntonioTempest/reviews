@@ -117,14 +117,14 @@ Queries.getCharacteristics = (id) => {
           WHERE characteristic_reviews.characteristic_id = characteristics.id
           ))
           )
-        ) characteristics FROM characteristics WHERE characteristics.product_id=$1
+        ) ch FROM characteristics WHERE characteristics.product_id=$1
        GROUP BY characteristics.name`, id)
         .then((data) => {
           var chars = {};
           data.map((char) => {
             //console.log(char)
-            var type = Object.keys(char.characteristics)[0];
-            chars[type] = char.characteristics[type][0];
+            var type = Object.keys(char.ch)[0];
+            chars[type] = char.ch[type][0];
           })
           return chars;
         })
