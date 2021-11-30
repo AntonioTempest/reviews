@@ -1,5 +1,5 @@
 const pgp = require('pg-promise')(/* options */)
-const db = pgp('postgres://postgres:postgres@localhost:5432/reviews')
+const db = pgp('postgres://postgres:postgres@52.15.58.58:5432/reviews')
 
 const Queries = {};
 
