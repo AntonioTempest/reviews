@@ -93,6 +93,6 @@ app.get('/loaderio-6167b42a4833b3f8f412051e3bb30e54', (req, res) => {
   res.status(200).send('loaderio-6167b42a4833b3f8f412051e3bb30e54');
 })
 
-app.get('/loaderio-loaderio-b0730df72225291c7785cbabaf959b93/', (req, res) => {
-  res.status(200).send('loaderio-b0730df72225291c7785cbabaf959b93');
+app.get('/loaderio-4074becf9e79789c1ba924694c7e74d2/', (req, res) => {
+  res.status(200).send('loaderio-4074becf9e79789c1ba924694c7e74d2');
 })
